@@ -1,0 +1,107 @@
+[
+  {
+    "cycle": 1,
+    "timestamp": "2026-06-15T11:39:09.009194",
+    "price_usd": 0.572893,
+    "change_24h": 3.14,
+    "block": 39979536,
+    "gas_gwei": 50.0001,
+    "news_sentiment": "NEUTRAL",
+    "headlines": [],
+    "signal": "SELL",
+    "side": "SHORT",
+    "score": -1,
+    "reasons": [
+      "Bullish 24h"
+    ],
+    "sl": 0.584351,
+    "tp1": 0.561435,
+    "tp2": 0.555706,
+    "tp3": 0.549977,
+    "rr": "1:2.0"
+  },
+  {
+    "cycle": 2,
+    "timestamp": "2026-06-15T11:39:17.344448",
+    "price_usd": 0.572893,
+    "change_24h": 3.14,
+    "block": 39979540,
+    "gas_gwei": 50.0001,
+    "news_sentiment": "NEUTRAL",
+    "headlines": [],
+    "signal": "SELL",
+    "side": "SHORT",
+    "score": -1,
+    "reasons": [
+      "Bullish 24h"
+    ],
+    "sl": 0.584351,
+    "tp1": 0.561435,
+    "tp2": 0.555706,
+    "tp3": 0.549977,
+    "rr": "1:2.0"
+  },
+  {
+    "cycle": 3,
+    "timestamp": "2026-06-15T11:39:24.722144",
+    "price_usd": 0.572893,
+    "change_24h": 3.14,
+    "block": 39979544,
+    "gas_gwei": 50.0001,
+    "news_sentiment": "NEUTRAL",
+    "headlines": [],
+    "signal": "SELL",
+    "side": "SHORT",
+    "score": -1,
+    "reasons": [
+      "Bullish 24h"
+    ],
+    "sl": 0.584351,
+    "tp1": 0.561435,
+    "tp2": 0.555706,
+    "tp3": 0.549977,
+    "rr": "1:2.0"
+  },
+  {
+    "cycle": 4,
+    "timestamp": "2026-06-15T11:39:32.446192",
+    "price_usd": 0.572893,
+    "change_24h": 3.14,
+    "block": 39979548,
+    "gas_gwei": 50.0001,
+    "news_sentiment": "NEUTRAL",
+    "headlines": [],
+    "signal": "SELL",
+    "side": "SHORT",
+    "score": -1,
+    "reasons": [
+      "Bullish 24h"
+    ],
+    "sl": 0.584351,
+    "tp1": 0.561435,
+    "tp2": 0.555706,
+    "tp3": 0.549977,
+    "rr": "1:2.0"
+  },
+  {
+    "cycle": 5,
+    "timestamp": "2026-06-15T11:39:41.645014",
+    "price_usd": 0.572893,
+    "change_24h": 3.14,
+    "block": 39979553,
+    "gas_gwei": 50.0001,
+    "news_sentiment": "NEUTRAL",
+    "headlines": [],
+    "signal": "SELL",
+    "side": "SHORT",
+    "score": -1,
+    "reasons": [
+      "Bullish 24h"
+    ],
+    "sl": 0.584351,
+    "tp1": 0.561435,
+    "tp2": 0.555706,
+    "tp3": 0.549977,
+    "rr": "1:2.0"
+  }
+]
