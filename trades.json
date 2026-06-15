@@ -1,29 +1,70 @@
-[
-  {
-    "cycle": 1,
-    "time": "11:33:55",
-    "price": 0.572473,
-    "change_24h": 3.26,
-    "block": 39979381,
-    "signal": "HOLD",
-    "confidence": "LOW"
+{
+  "agent": {
+    "agent_id": "mantle-ai-trader-001",
+    "name": "Mantle AI Trading Agent",
+    "version": "3.0",
+    "wallet": "0x466ad8606625a3ce2923a7fea9b0eb5477433337",
+    "track": "AI Trading & Strategy",
+    "hackathon": "Turing Test Hackathon 2026",
+    "capabilities": [
+      "price_monitoring",
+      "technical_analysis",
+      "signal_generation",
+      "on_chain_block_tracking",
+      "decision_logging"
+    ]
   },
-  {
-    "cycle": 2,
-    "time": "11:34:04",
-    "price": 0.57252,
-    "change_24h": 3.27,
-    "block": 39979385,
-    "signal": "HOLD",
-    "confidence": "LOW"
-  },
-  {
-    "cycle": 3,
-    "time": "11:34:12",
-    "price": 0.57252,
-    "change_24h": 3.27,
-    "block": 39979389,
-    "signal": "HOLD",
-    "confidence": "LOW"
-  }
-]
+  "trades": [
+    {
+      "cycle": 1,
+      "timestamp": "2026-06-15T10:56:48.892858Z",
+      "mantle_block": 39988167,
+      "price_usd": 0.574873,
+      "change_24h_pct": 2.87,
+      "sma_short_6period": 0.5733,
+      "sma_long_24period": 0.564334,
+      "rsi_14": 66.88,
+      "signal": "HOLD",
+      "confidence": "LOW",
+      "score": 0,
+      "reasoning": [
+        "24h gain of 2.87%",
+        "short-term SMA above long-term SMA - uptrend"
+      ]
+    },
+    {
+      "cycle": 2,
+      "timestamp": "2026-06-15T10:56:56.340171Z",
+      "mantle_block": 39988170,
+      "price_usd": 0.574873,
+      "change_24h_pct": 2.87,
+      "sma_short_6period": 0.5733,
+      "sma_long_24period": 0.564334,
+      "rsi_14": 66.88,
+      "signal": "HOLD",
+      "confidence": "LOW",
+      "score": 0,
+      "reasoning": [
+        "24h gain of 2.87%",
+        "short-term SMA above long-term SMA - uptrend"
+      ]
+    },
+    {
+      "cycle": 3,
+      "timestamp": "2026-06-15T10:57:02.818102Z",
+      "mantle_block": 39988174,
+      "price_usd": 0.574051,
+      "change_24h_pct": 2.72,
+      "sma_short_6period": 0.573163,
+      "sma_long_24period": 0.564299,
+      "rsi_14": 65.18,
+      "signal": "HOLD",
+      "confidence": "LOW",
+      "score": 0,
+      "reasoning": [
+        "24h gain of 2.72%",
+        "short-term SMA above long-term SMA - uptrend"
+      ]
+    }
+  ]
+}
