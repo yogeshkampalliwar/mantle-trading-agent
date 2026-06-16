@@ -17,53 +17,56 @@
   "trades": [
     {
       "cycle": 1,
-      "timestamp": "2026-06-15T10:56:48.892858Z",
-      "mantle_block": 39988167,
-      "price_usd": 0.574873,
-      "change_24h_pct": 2.87,
-      "sma_short_6period": 0.5733,
-      "sma_long_24period": 0.564334,
-      "rsi_14": 66.88,
-      "signal": "HOLD",
-      "confidence": "LOW",
-      "score": 0,
+      "timestamp": "2026-06-15T12:44:05.285588Z",
+      "mantle_block": 39991385,
+      "price_usd": 0.584873,
+      "change_24h_pct": 5.06,
+      "sma_short_6period": 0.578592,
+      "sma_long_24period": 0.56706,
+      "rsi_14": 82.57,
+      "signal": "STRONG SELL",
+      "confidence": "HIGH",
+      "score": -3,
       "reasoning": [
-        "24h gain of 2.87%",
-        "short-term SMA above long-term SMA - uptrend"
+        "24h surge of 5.06% (overbought momentum)",
+        "short-term SMA above long-term SMA - uptrend",
+        "RSI=82.6 indicates overbought"
       ]
     },
     {
       "cycle": 2,
-      "timestamp": "2026-06-15T10:56:56.340171Z",
-      "mantle_block": 39988170,
-      "price_usd": 0.574873,
-      "change_24h_pct": 2.87,
-      "sma_short_6period": 0.5733,
-      "sma_long_24period": 0.564334,
-      "rsi_14": 66.88,
-      "signal": "HOLD",
-      "confidence": "LOW",
-      "score": 0,
+      "timestamp": "2026-06-15T12:44:12.401296Z",
+      "mantle_block": 39991389,
+      "price_usd": 0.584873,
+      "change_24h_pct": 5.06,
+      "sma_short_6period": 0.578592,
+      "sma_long_24period": 0.56706,
+      "rsi_14": 82.57,
+      "signal": "STRONG SELL",
+      "confidence": "HIGH",
+      "score": -3,
       "reasoning": [
-        "24h gain of 2.87%",
-        "short-term SMA above long-term SMA - uptrend"
+        "24h surge of 5.06% (overbought momentum)",
+        "short-term SMA above long-term SMA - uptrend",
+        "RSI=82.6 indicates overbought"
       ]
     },
     {
       "cycle": 3,
-      "timestamp": "2026-06-15T10:57:02.818102Z",
-      "mantle_block": 39988174,
-      "price_usd": 0.574051,
-      "change_24h_pct": 2.72,
-      "sma_short_6period": 0.573163,
-      "sma_long_24period": 0.564299,
-      "rsi_14": 65.18,
-      "signal": "HOLD",
-      "confidence": "LOW",
-      "score": 0,
+      "timestamp": "2026-06-15T12:44:19.800203Z",
+      "mantle_block": 39991392,
+      "price_usd": 0.584873,
+      "change_24h_pct": 5.06,
+      "sma_short_6period": 0.578592,
+      "sma_long_24period": 0.56706,
+      "rsi_14": 82.57,
+      "signal": "STRONG SELL",
+      "confidence": "HIGH",
+      "score": -3,
       "reasoning": [
-        "24h gain of 2.72%",
-        "short-term SMA above long-term SMA - uptrend"
+        "24h surge of 5.06% (overbought momentum)",
+        "short-term SMA above long-term SMA - uptrend",
+        "RSI=82.6 indicates overbought"
       ]
     }
   ]
