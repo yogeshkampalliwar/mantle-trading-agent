@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mantle AI Trading Dashboard</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0a0a0f; color: #fff; font-family: 'Segoe UI', sans-serif; }
+
+.header {
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  padding: 20px;
+  text-align: center;
+  border-bottom: 2px solid #00ff88;
+}
+
+.header h1 {
+  font-size: 24px;
+  background: linear-gradient(90deg, #00ff88, #00aaff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header p { color: #888; font-size: 12px; margin-top: 5px; }
+
+.prices {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  padding: 15px;
+  background: #0d0d1a;
+}
+
+.price-card {
+  min-width: 130px;
+  background: #1a1a2e;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #333;
+}
+
+.price-card .symbol { font-size: 14px; font-weight: bold; color: #00aaff; }
+.price-card .price { font-size: 16px; font-weight: bold; margin: 5px 0; }
+.positive { color: #00ff88; }
+.negative { color: #ff4466; }
+
+.signal-box {
+  margin: 15px;
+  padding: 20px;
+  border-radius: 16px;
+  text-align: center;
+  border: 2px solid;
+}
+
+.signal-buy { background: linear-gradient(135deg, #0d2b1a, #1a3a2a); border-color: #00ff88; }
+.signal-sell { background: linear-gradient(135deg, #2b0d1a, #3a1a2a); border-color: #ff4466; }
+.signal-hold { background: linear-gradient(135deg, #1a1a2e, #2a2a3e); border-color: #ffaa00; }
+
+.signal-text { font-size: 32px; font-weight: bold; margin: 10px 0; }
+.signal-buy .signal-text { color: #00ff88; }
+.signal-sell .signal-text { color: #ff4466; }
+.signal-hold .signal-text { color: #ffaa00; }
+
+.signal-details { font-size: 13px; color: #aaa; margin-top: 5px; }
+
+.section-title {
+  font-size: 13px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 15px 0 10px 15px;
+}
+
+.news-container { padding: 0 15px 80px; }
+
+.news-card {
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 12px;
+  border-left: 4px solid;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.news-card:active { transform: scale(0.98); }
+
+.news-card.good {
+  background: linear-gradient(135deg, #0d2b1a, #1a3a2a);
+  border-color: #00ff88;
+}
+
+.news-card.bad {
+  background: linear-gradient(135deg, #2b0d1a, #3a1a2a);
+  border-color: #ff4466;
+}
+
+.news-card.neutral {
+  background: linear-gradient(135deg, #1a1a2e, #2a2a3e);
+  border-color: #00aaff;
+}
+
+.news-badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.badge-good { background: #00ff88; color: #000; }
+.badge-bad { background: #ff4466; color: #fff; }
+.badge-neutral { background: #00aaff; color: #000; }
+
+.news-title { font-size: 14px; font-weight: bold; margin-bottom: 6px; line-height: 1.4; }
+.news-summary { font-size: 12px; color: #aaa; line-height: 1.5; }
+.news-meta { font-size: 11px; color: #666; margin-top: 8px; }
+
+.ai-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: linear-gradient(90deg, #ff6b6b, #ffd93d);
+  color: #000;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.loading { text-align: center; padding: 40px; color: #666; }
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid #333;
+  border-top-color: #00ff88;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 15px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.refresh-btn {
+  position: fixed;
+  bottom: 20px; right: 20px;
+  background: linear-gradient(135deg, #00ff88, #00aaff);
+  color: #000; border: none;
+  border-radius: 50%;
+  width: 55px; height: 55px;
+  font-size: 22px; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0,255,136,0.4);
+}
+
+.stats-row {
+  display: flex;
+  gap: 10px;
+  padding: 0 15px 15px;
+}
+
+.stat-card {
+  flex: 1;
+  background: #1a1a2e;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #333;
+}
+
+.stat-label { font-size: 11px; color: #666; }
+.stat-value { font-size: 18px; font-weight: bold; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🤖 Mantle AI Trading</h1>
+  <p>CBC Flip Strategy • Turing Test Hackathon 2026</p>
+</div>
+
+<div class="prices" id="prices">
+  <div class="loading"><div class="spinner"></div></div>
+</div>
+
+<div id="signal-box" class="signal-box signal-hold" style="margin:15px;padding:20px;border-radius:16px;text-align:center;">
+  <div style="font-size:13px;color:#aaa">AI SIGNAL</div>
+  <div class="signal-text" id="signal-text">Loading...</div>
+  <div class="signal-details" id="signal-details">Analyzing market...</div>
+</div>
+
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-label">Block</div>
+    <div class="stat-value positive" id="block-num">--</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Gas</div>
+    <div class="stat-value" id="gas-price" style="color:#ffaa00">--</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">News</div>
+    <div class="stat-value" id="news-sentiment">--</div>
+  </div>
+</div>
+
+<div class="section-title">📰 Crypto News — AI Sentiment</div>
+
+<div class="news-container" id="news">
+  <div class="loading">
+    <div class="spinner"></div>
+    <p>Loading news...</p>
+  </div>
+</div>
+
+<button class="refresh-btn" onclick="loadAll()">🔄</button>
+
+<script>
+const RPC = 'https://rpc.sepolia.mantle.xyz';
+
+async function getMNTPrice() {
+  const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=mantle,bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true');
+  return await r.json();
+}
+
+async function getBlock() {
+  const r = await fetch(RPC, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({jsonrpc:'2.0',method:'eth_blockNumber',params:[],id:1})
+  });
+  const d = await r.json();
+  return parseInt(d.result, 16);
+}
+
+async function getGas() {
+  const r = await fetch(RPC, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({jsonrpc:'2.0',method:'eth_gasPrice',params:[],id:1})
+  });
+  const d = await r.json();
+  return (parseInt(d.result, 16) / 1e9).toFixed(2);
+}
+
+function analyzeSentiment(title, body) {
+  const text = (title + ' ' + (body || '')).toLowerCase();
+  const good = ['surge','rally','gain','bull','rise','record','growth','adoption','launch','partnership','approval','profit','win','bullish','pump','moon','ath','up'];
+  const bad = ['crash','fall','drop','bear','hack','scam','fraud','ban','lawsuit','loss','fear','dump','decline','warning','risk','fail','down'];
+  let score = 0;
+  good.forEach(w => { if(text.includes(w)) score++; });
+  bad.forEach(w => { if(text.includes(w)) score--; });
+  if (score > 0) return 'good';
+  if (score < 0) return 'bad';
+  return 'neutral';
+}
+
+function cbcSignal(price, change) {
+  let score = 0;
+  if (change < -5) score += 2;
+  else if (change < -2) score += 1;
+  else if (change > 5) score -= 2;
+  else if (change > 2) score -= 1;
+  if (price < 0.40) score += 2;
+  else if (price > 0.80) score -= 2;
+  if (score >= 2) return {signal: '🟢 STRONG BUY', cls: 'signal-buy', tp: (price * 1.04).toFixed(4), sl: (price * 0.98).toFixed(4)};
+  if (score >= 1) return {signal: '🟢 BUY', cls: 'signal-buy', tp: (price * 1.02).toFixed(4), sl: (price * 0.99).toFixed(4)};
+  if (score <= -2) return {signal: '🔴 STRONG SELL', cls: 'signal-sell', tp: (price * 0.96).toFixed(4), sl: (price * 1.02).toFixed(4)};
+  if (score <= -1) return {signal: '🔴 SELL', cls: 'signal-sell', tp: (price * 0.98).toFixed(4), sl: (price * 1.01).toFixed(4)};
+  return {signal: '🟡 HOLD', cls: 'signal-hold', tp: '--', sl: '--'};
+}
+
+function timeAgo(ts) {
+  const diff = Math.floor((Date.now() - ts * 1000) / 60000);
+  if (diff < 60) return diff + 'm ago';
+  return Math.floor(diff/60) + 'h ago';
+}
+
+async function loadNews() {
+  try {
+    const r = await fetch('https://min-api.cryptocompare.com/data/v2/news/?lang=EN');
+    const d = await r.json();
+    const articles = d.Data?.slice(0, 12) || [];
+    let bullish = 0, bearish = 0;
+    let html = '';
+    for (const a of articles) {
+      const s = analyzeSentiment(a.title, a.body);
+      if (s === 'good') bullish++;
+      if (s === 'bad') bearish++;
+      const badge = s === 'good' ? 'badge-good' : s === 'bad' ? 'badge-bad' : 'badge-neutral';
+      const emoji = s === 'good' ? '🟢 BULLISH' : s === 'bad' ? '🔴 BEARISH' : '🔵 NEUTRAL';
+      html += `
+        <div class="news-card ${s}" onclick="window.open('${a.url}','_blank')">
+          <span class="ai-badge">🤖 AI</span>
+          <span class="news-badge ${badge}">${emoji}</span>
+          <div class="news-title">${a.title}</div>
+          <div class="news-summary">${(a.body||'').substring(0,100)}...</div>
+          <div class="news-meta">📰 ${a.source_info?.name||'News'} • ${timeAgo(a.published_on)}</div>
+        </div>`;
+    }
+    document.getElementById('news').innerHTML = html;
+    const sentiment = bullish > bearish ? '🟢' : bearish > bullish ? '🔴' : '🔵';
+    document.getElementById('news-sentiment').textContent = sentiment;
+    document.getElementById('news-sentiment').style.color = bullish > bearish ? '#00ff88' : bearish > bullish ? '#ff4466' : '#00aaff';
+  } catch(e) {
+    document.getElementById('news').innerHTML = '<div class="loading"><p style="color:#ff4466">News unavailable</p></div>';
+  }
+}
+
+async function loadPrices() {
+  try {
+    const data = await getMNTPrice();
+    const coins = [
+      {id:'mantle', sym:'MNT'},
+      {id:'bitcoin', sym:'BTC'},
+      {id:'ethereum', sym:'ETH'}
+    ];
+    let html = '';
+    for (const c of coins) {
+      const info = data[c.id];
+      if (!info) continue;
+      const change = info.usd_24h_change?.toFixed(2) || 0;
+      const isPos = change >= 0;
+      html += `
+        <div class="price-card">
+          <div class="symbol">${c.sym}</div>
+          <div class="price">$${info.usd?.toLocaleString()}</div>
+          <div class="${isPos ? 'positive' : 'negative'}">${isPos ? '▲' : '▼'} ${Math.abs(change)}%</div>
+        </div>`;
+    }
+    document.getElementById('prices').innerHTML = html;
+
+    // Update signal
+    const mnt = data['mantle'];
+    if (mnt) {
+      const sig = cbcSignal(mnt.usd, mnt.usd_24h_change);
+      const box = document.getElementById('signal-box');
+      box.className = 'signal-box ' + sig.cls;
+      document.getElementById('signal-text').textContent = sig.signal;
+      document.getElementById('signal-details').textContent = `Price: $${mnt.usd} | TP: $${sig.tp} | SL: $${sig.sl}`;
+    }
+  } catch(e) {
+    document.getElementById('prices').innerHTML = '<div style="color:#666;padding:20px">Price unavailable</div>';
+  }
+}
+
+async function loadChain() {
+  try {
+    const [block, gas] = await Promise.all([getBlock(), getGas()]);
+    document.getElementById('block-num').textContent = block.toLocaleString();
+    document.getElementById('gas-price').textContent = gas + ' Gwei';
+  } catch(e) {}
+}
+
+async function loadAll() {
+  await Promise.all([loadPrices(), loadNews(), loadChain()]);
+}
+
+loadAll();
+setInterval(loadAll, 30000);
+</script>
+</body>
+</html>
