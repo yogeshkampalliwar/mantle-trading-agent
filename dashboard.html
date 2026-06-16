@@ -298,7 +298,7 @@ async function loadChain() {
 
 async function loadNews() {
   try {
-    const r = await fetch('https://cryptopanic.com/api/v1/posts/?auth_token=free&public=true&kind=news');
+    const r = await fetch('https://api.coingecko.com/api/v3/news?page=1');
     const d = await r.json();
     const articles = d.results?.slice(0, 15) || [];
     let bull = 0, bear = 0;
