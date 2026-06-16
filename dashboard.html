@@ -278,7 +278,7 @@ function timeAgo(ts) {
 
 async function loadNews() {
   try {
-    const r = await fetch('https://min-api.cryptocompare.com/data/v2/news/?lang=EN');
+    const r = await fetch('https://cryptopanic.com/api/v1/posts/?auth_token=free&public=true&kind=news');
     const d = await r.json();
     const articles = d.Data?.slice(0, 12) || [];
     let bullish = 0, bearish = 0;
