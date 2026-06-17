@@ -6,143 +6,254 @@
 <title>Mantle AI Trading Pro</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a0f;color:#fff;font-family:'Segoe UI',sans-serif;font-size:13px}
+body{background:#0a0a0f;color:#fff;font-family:'Segoe UI',sans-serif}
 .header{background:linear-gradient(135deg,#1a1a2e,#16213e);padding:15px;text-align:center;border-bottom:2px solid #00ff88}
 .header h1{font-size:20px;background:linear-gradient(90deg,#00ff88,#00aaff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .header p{color:#888;font-size:11px;margin-top:3px}
 .warning{background:#2b1a00;border:1px solid #ffaa00;border-radius:8px;padding:8px 15px;margin:8px;font-size:11px;color:#ffaa00;text-align:center}
-.prices{display:flex;overflow-x:auto;gap:8px;padding:10px;background:#0d0d1a}
-.price-card{min-width:110px;background:#1a1a2e;border-radius:10px;padding:10px;text-align:center;border:1px solid #333;cursor:pointer;transition:border 0.2s}
-.price-card:active{border-color:#00ff88}
-.price-card .sym{font-size:12px;font-weight:bold;color:#00aaff}
-.price-card .prc{font-size:15px;font-weight:bold;margin:4px 0}
-.positive{color:#00ff88}.negative{color:#ff4466}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:0 8px 8px}
+.tabs{display:flex;gap:0;padding:0;background:#0d0d1a;border-bottom:1px solid #333;overflow-x:auto}
+.tab{padding:10px 16px;font-size:12px;cursor:pointer;color:#888;border-bottom:2px solid transparent;white-space:nowrap}
+.tab.active{color:#00ff88;border-bottom-color:#00ff88}
+.panel{display:none;padding:10px}
+.panel.active{display:block}
+.signal-box{border-radius:12px;padding:15px;margin-bottom:10px;text-align:center}
+.buy-box{background:linear-gradient(135deg,#0d2b1a,#1a3a2a);border:2px solid #00ff88}
+.sell-box{background:linear-gradient(135deg,#2b0d1a,#3a1a2a);border:2px solid #ff4466}
+.hold-box{background:linear-gradient(135deg,#1a1a00,#2a2a00);border:2px solid #ffaa00}
+.signal-text{font-size:28px;font-weight:bold}
+.buy-text{color:#00ff88}.sell-text{color:#ff4466}.hold-text{color:#ffaa00}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
 .card{background:#1a1a2e;border-radius:10px;padding:12px;border:1px solid #333}
 .card-title{font-size:10px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
-.signal-big{font-size:22px;font-weight:bold;text-align:center;padding:5px 0}
-.buy{color:#00ff88}.sell{color:#ff4466}.hold{color:#ffaa00}
-.row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid #222}
+.row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #1a1a2e}
 .row:last-child{border-bottom:none}
 .label{color:#888;font-size:11px}
-.value{font-weight:bold;font-size:12px}
-.meter-bar{height:8px;border-radius:4px;background:#333;margin:4px 0;overflow:hidden}
-.meter-fill{height:100%;border-radius:4px;transition:width 0.5s}
-.news-card{border-radius:10px;padding:12px;margin-bottom:8px;border-left:4px solid;cursor:pointer;position:relative}
-.news-card.good{background:linear-gradient(135deg,#0d2b1a,#1a3a2a);border-color:#00ff88}
-.news-card.bad{background:linear-gradient(135deg,#2b0d1a,#3a1a2a);border-color:#ff4466}
-.news-card.neutral{background:linear-gradient(135deg,#1a1a2e,#2a2a3e);border-color:#00aaff}
-.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:bold;margin-bottom:6px}
-.bg{background:#00ff88;color:#000}.bb{background:#ff4466;color:#fff}.bn{background:#00aaff;color:#000}
-.ai-tag{position:absolute;top:8px;right:8px;background:linear-gradient(90deg,#ff6b6b,#ffd93d);color:#000;font-size:9px;font-weight:bold;padding:2px 6px;border-radius:8px}
-.news-title{font-size:13px;font-weight:bold;margin-bottom:4px;line-height:1.4}
-.news-meta{font-size:10px;color:#666;margin-top:6px}
-.section{padding:8px;font-size:11px;color:#666;text-transform:uppercase;letter-spacing:1px}
-.refresh-btn{position:fixed;bottom:20px;right:20px;background:linear-gradient(90deg,#00ff88,#00aaff);color:#000;border:none;border-radius:50%;width:50px;height:50px;font-size:20px;cursor:pointer;box-shadow:0 4px 20px rgba(0,255,136,0.4)}
+.val{font-weight:bold;font-size:12px}
+.pos{color:#00ff88}.neg{color:#ff4466}.neu{color:#ffaa00}
+.tv-widget{border-radius:10px;overflow:hidden;margin-bottom:10px}
+.pair-btns{display:flex;flex-wrap:wrap;gap:6px;padding:10px 0}
+.pair-btn{padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;background:#1a1a2e;border:1px solid #333;color:#888}
+.pair-btn.active{background:#00ff88;color:#000;border-color:#00ff88}
+.meter-bar{height:10px;border-radius:5px;background:#333;margin:6px 0;overflow:hidden}
+.meter-fill{height:100%;border-radius:5px;transition:width 0.5s}
+.news-item{background:#1a1a2e;border-radius:8px;padding:10px;margin-bottom:8px;border-left:3px solid #333;cursor:pointer}
+.news-item.bull{border-left-color:#00ff88;background:#0d1a0d}
+.news-item.bear{border-left-color:#ff4466;background:#1a0d0d}
+.news-badge{font-size:10px;font-weight:bold;padding:2px 8px;border-radius:10px;margin-bottom:5px;display:inline-block}
+.bb{background:#00ff88;color:#000}.rb{background:#ff4466;color:#fff}.nb{background:#555;color:#fff}
 .spinner{width:30px;height:30px;border:3px solid #333;border-top-color:#00ff88;border-radius:50%;animation:spin 1s linear infinite;margin:20px auto}
 @keyframes spin{to{transform:rotate(360deg)}}
-.bollinger{display:flex;gap:5px;margin-top:5px}
-.band{flex:1;text-align:center;padding:6px;border-radius:8px;font-size:11px}
-.band-upper{background:#2b0d1a;border:1px solid #ff4466}
-.band-mid{background:#1a1a2e;border:1px solid #ffaa00}
-.band-lower{background:#0d2b1a;border:1px solid #00ff88}
-.news-wrap{padding:0 8px 80px}
-.cbc-box{text-align:center;padding:15px;border-radius:12px;margin:5px 0;border:1px solid #ffaa00;background:#1a1a00}
+.refresh-btn{position:fixed;bottom:20px;right:20px;background:linear-gradient(135deg,#00ff88,#00aaff);color:#000;border:none;border-radius:50%;width:50px;height:50px;font-size:20px;cursor:pointer;box-shadow:0 4px 20px rgba(0,255,136,0.4);z-index:999}
+.bb-bands{display:flex;gap:5px}
+.bb-band{flex:1;text-align:center;padding:8px;border-radius:8px;font-size:11px}
 </style>
 </head>
 <body>
 
 <div class="header">
   <h1>🤖 Mantle AI Trading Pro</h1>
-  <p>CBC Flip • EMA • Bollinger • News Sentiment • Turing Test 2026</p>
+  <p>CBC Flip • EMA • RSI • Bollinger • Turing Test Hackathon 2026</p>
 </div>
 
 <div class="warning">⚠️ Financial Warning: Educational only. Not financial advice. Trading involves risk of loss.</div>
 
-<div class="prices" id="prices"><div class="spinner"></div></div>
-
-<div class="grid2">
-  <div class="card">
-    <div class="card-title">🎯 CBC Flip Signal</div>
-    <div class="cbc-box" id="cbc-box">
-      <div class="signal-big hold" id="cbc-signal">--</div>
-      <div style="font-size:11px;color:#aaa;margin-top:4px" id="cbc-score">Loading...</div>
-    </div>
-    <div class="row"><span class="label">SL</span><span class="value negative" id="sl-val">--</span></div>
-    <div class="row"><span class="label">TP1 (1R)</span><span class="value positive" id="tp1-val">--</span></div>
-    <div class="row"><span class="label">TP2 (1.5R)</span><span class="value positive" id="tp2-val">--</span></div>
-    <div class="row"><span class="label">TP3 (2R)</span><span class="value positive" id="tp3-val">--</span></div>
-  </div>
-  <div class="card">
-    <div class="card-title">📊 Sentiment Meter</div>
-    <div style="text-align:center;padding:8px 0">
-      <div style="font-size:28px" id="sent-emoji">🔵</div>
-      <div style="font-weight:bold;font-size:16px;margin:4px 0" id="sent-text">NEUTRAL</div>
-    </div>
-    <div class="label" style="margin-bottom:4px">Bull vs Bear</div>
-    <div class="meter-bar"><div class="meter-fill" id="bull-bar" style="background:#00ff88;width:50%"></div></div>
-    <div style="display:flex;justify-content:space-between;font-size:10px;color:#666;margin-top:2px">
-      <span id="bull-count">Bull: 0</span><span id="bear-count">Bear: 0</span>
-    </div>
-    <div class="row" style="margin-top:8px"><span class="label">Score</span><span class="value" id="news-score">--</span></div>
-    <div class="row"><span class="label">Market</span><span class="value" id="fear-val">--</span></div>
-  </div>
+<div class="tabs">
+  <div class="tab active" onclick="showTab('signal')">📊 Signal</div>
+  <div class="tab" onclick="showTab('chart')">📈 Chart</div>
+  <div class="tab" onclick="showTab('crypto')">💰 Crypto</div>
+  <div class="tab" onclick="showTab('forex')">💱 Forex</div>
+  <div class="tab" onclick="showTab('news')">📰 News</div>
 </div>
 
-<div class="grid3">
-  <div class="card">
-    <div class="card-title">⛓️ On-Chain</div>
-    <div class="row"><span class="label">Block</span><span class="value positive" id="block-num">--</span></div>
-    <div class="row"><span class="label">Gas</span><span class="value" style="color:#ffaa00" id="gas-val">--</span></div>
-    <div class="row"><span class="label">Net</span><span class="value" style="color:#00aaff">Mantle</span></div>
+<!-- SIGNAL TAB -->
+<div id="tab-signal" class="panel active">
+  <div id="signal-box" class="signal-box hold-box">
+    <div>AI SIGNAL</div>
+    <div class="signal-text hold-text" id="sig-text">Loading...</div>
+    <div style="font-size:12px;color:#aaa;margin-top:5px" id="sig-detail">Analyzing...</div>
   </div>
-  <div class="card">
-    <div class="card-title">📈 Trend</div>
-    <div class="row"><span class="label">1H</span><span class="value" id="t1h">--</span></div>
-    <div class="row"><span class="label">4H</span><span class="value" id="t4h">--</span></div>
-    <div class="row"><span class="label">1D</span><span class="value" id="t1d">--</span></div>
-    <div class="row"><span class="label">1W</span><span class="value" id="t1w">--</span></div>
-  </div>
-  <div class="card">
-    <div class="card-title">📉 EMA</div>
-    <div class="row"><span class="label">EMA9</span><span class="value" id="ema9">--</span></div>
-    <div class="row"><span class="label">EMA21</span><span class="value" id="ema21">--</span></div>
-    <div class="row"><span class="label">EMA200</span><span class="value" id="ema200">--</span></div>
-    <div class="row"><span class="label">Cross</span><span class="value" id="ema-cross">--</span></div>
-  </div>
-</div>
 
-<div style="padding:0 8px 8px">
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">🎯 TP/SL Levels</div>
+      <div class="row"><span class="label">SL</span><span class="val neg" id="sl">--</span></div>
+      <div class="row"><span class="label">TP1 (1R)</span><span class="val pos" id="tp1">--</span></div>
+      <div class="row"><span class="label">TP2 (1.5R)</span><span class="val pos" id="tp2">--</span></div>
+      <div class="row"><span class="label">TP3 (2R)</span><span class="val pos" id="tp3">--</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📊 Indicators</div>
+      <div class="row"><span class="label">RSI</span><span class="val" id="rsi">--</span></div>
+      <div class="row"><span class="label">EMA Cross</span><span class="val" id="ema-cross">--</span></div>
+      <div class="row"><span class="label">BB Position</span><span class="val" id="bb-pos">--</span></div>
+      <div class="row"><span class="label">Trend</span><span class="val" id="trend-1d">--</span></div>
+    </div>
+  </div>
+
+  <div class="grid3">
+    <div class="card">
+      <div class="card-title">⛓️ On-Chain</div>
+      <div class="row"><span class="label">Block</span><span class="val pos" id="block">--</span></div>
+      <div class="row"><span class="label">Gas</span><span class="val neu" id="gas">--</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📈 EMA</div>
+      <div class="row"><span class="label">EMA9</span><span class="val" id="ema9">--</span></div>
+      <div class="row"><span class="label">EMA21</span><span class="val" id="ema21">--</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📉 Sentiment</div>
+      <div style="text-align:center;font-size:24px" id="sent-emoji">🔵</div>
+      <div style="text-align:center;font-weight:bold;font-size:13px" id="sent-text">--</div>
+    </div>
+  </div>
+
   <div class="card">
     <div class="card-title">📊 Bollinger Bands</div>
-    <div class="bollinger">
-      <div class="band band-upper"><div style="color:#ff4466;font-size:10px">UPPER</div><div style="font-weight:bold" id="bb-upper">--</div><div style="font-size:10px;color:#888">Resistance</div></div>
-      <div class="band band-mid"><div style="color:#ffaa00;font-size:10px">MIDDLE</div><div style="font-weight:bold" id="bb-mid">--</div><div style="font-size:10px;color:#888">EMA20</div></div>
-      <div class="band band-lower"><div style="color:#00ff88;font-size:10px">LOWER</div><div style="font-weight:bold" id="bb-lower">--</div><div style="font-size:10px;color:#888">Support</div></div>
+    <div class="bb-bands">
+      <div class="bb-band" style="background:#2b0d1a;border:1px solid #ff4466">
+        <div style="color:#ff4466;font-size:10px">UPPER</div>
+        <div id="bb-up">--</div>
+        <div style="color:#888;font-size:10px">Resistance</div>
+      </div>
+      <div class="bb-band" style="background:#1a1a2e;border:1px solid #ffaa00">
+        <div style="color:#ffaa00;font-size:10px">MIDDLE</div>
+        <div id="bb-mid">--</div>
+        <div style="color:#888;font-size:10px">EMA20</div>
+      </div>
+      <div class="bb-band" style="background:#0d2b1a;border:1px solid #00ff88">
+        <div style="color:#00ff88;font-size:10px">LOWER</div>
+        <div id="bb-low">--</div>
+        <div style="color:#888;font-size:10px">Support</div>
+      </div>
     </div>
-    <div class="row" style="margin-top:8px"><span class="label">Position</span><span class="value" id="bb-pos">--</span></div>
-    <div class="row"><span class="label">Squeeze</span><span class="value" id="bb-squeeze">--</span></div>
   </div>
 </div>
 
-<div class="section">📰 Live Crypto News — AI Sentiment</div>
-<div class="news-wrap" id="news"><div class="spinner"></div></div>
+<!-- CHART TAB -->
+<div id="tab-chart" class="panel">
+  <div class="pair-btns" id="chart-pairs">
+    <div class="pair-btn active" onclick="loadChart('MANTLE_PERPETUAL:MNTUSDT','crypto')">MNT/USDT</div>
+    <div class="pair-btn" onclick="loadChart('BINANCE:BTCUSDT','crypto')">BTC/USDT</div>
+    <div class="pair-btn" onclick="loadChart('BINANCE:ETHUSDT','crypto')">ETH/USDT</div>
+    <div class="pair-btn" onclick="loadChart('BINANCE:SOLUSDT','crypto')">SOL/USDT</div>
+    <div class="pair-btn" onclick="loadChart('BINANCE:BNBUSDT','crypto')">BNB/USDT</div>
+  </div>
+  <div class="tv-widget">
+    <div class="tradingview-widget-container" style="height:450px">
+      <div id="tv-chart" style="height:450px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CRYPTO TAB -->
+<div id="tab-crypto" class="panel">
+  <div class="pair-btns">
+    <div class="pair-btn active" onclick="loadCryptoChart('BINANCE:BTCUSDT')">BTC</div>
+    <div class="pair-btn" onclick="loadCryptoChart('BINANCE:ETHUSDT')">ETH</div>
+    <div class="pair-btn" onclick="loadCryptoChart('BINANCE:SOLUSDT')">SOL</div>
+    <div class="pair-btn" onclick="loadCryptoChart('BINANCE:BNBUSDT')">BNB</div>
+    <div class="pair-btn" onclick="loadCryptoChart('BINANCE:XRPUSDT')">XRP</div>
+    <div class="pair-btn" onclick="loadCryptoChart('BINANCE:DOGEUSDT')">DOGE</div>
+    <div class="pair-btn" onclick="loadCryptoChart('BINANCE:ADAUSDT')">ADA</div>
+    <div class="pair-btn" onclick="loadCryptoChart('BINANCE:AVAXUSDT')">AVAX</div>
+  </div>
+  <div id="crypto-chart" style="height:450px"></div>
+</div>
+
+<!-- FOREX TAB -->
+<div id="tab-forex" class="panel">
+  <div class="pair-btns">
+    <div class="pair-btn active" onclick="loadForexChart('FX:EURUSD')">EUR/USD</div>
+    <div class="pair-btn" onclick="loadForexChart('FX:GBPUSD')">GBP/USD</div>
+    <div class="pair-btn" onclick="loadForexChart('FX:USDJPY')">USD/JPY</div>
+    <div class="pair-btn" onclick="loadForexChart('FX:EURJPY')">EUR/JPY</div>
+    <div class="pair-btn" onclick="loadForexChart('TVC:GOLD')">XAU/USD</div>
+    <div class="pair-btn" onclick="loadForexChart('NASDAQ:AAPL')">AAPL</div>
+    <div class="pair-btn" onclick="loadForexChart('NASDAQ:TSLA')">TSLA</div>
+    <div class="pair-btn" onclick="loadForexChart('FOREXCOM:NASDAQ')">NAS100</div>
+  </div>
+  <div id="forex-chart" style="height:450px"></div>
+</div>
+
+<!-- NEWS TAB -->
+<div id="tab-news" class="panel">
+  <div class="card" style="margin-bottom:10px">
+    <div class="card-title">📊 Sentiment Overview</div>
+    <div style="text-align:center;font-size:22px;padding:5px" id="news-sent-emoji">🔵</div>
+    <div style="text-align:center;font-weight:bold" id="news-sent-text">Loading...</div>
+    <div class="meter-bar"><div class="meter-fill" id="bull-bar" style="background:#00ff88;width:50%"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:#666">
+      <span id="bull-cnt">Bull: 0</span><span id="bear-cnt">Bear: 0</span>
+    </div>
+  </div>
+  <div id="news-list"><div class="spinner"></div></div>
+</div>
 
 <button class="refresh-btn" onclick="loadAll()">🔄</button>
 
+<script src="https://s3.tradingview.com/tv.js"></script>
 <script>
 const RPC = 'https://rpc.sepolia.mantle.xyz';
-const RSS_PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=';
-const NEWS_FEEDS = [
-  'https://cointelegraph.com/rss',
-  'https://decrypt.co/feed',
-  'https://bitcoinist.com/feed/'
-];
+let tvWidget = null;
+let cryptoWidget = null;
+let forexWidget = null;
 
-async function getMNTPrice() {
-  const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=mantle,bitcoin,ethereum,solana&vs_currencies=usd&include_24hr_change=true');
-  return r.json();
+function showTab(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  event.target.classList.add('active');
+  if(name === 'chart' && !tvWidget) loadChart('BINANCE:BTCUSDT','crypto');
+  if(name === 'crypto' && !cryptoWidget) loadCryptoChart('BINANCE:BTCUSDT');
+  if(name === 'forex' && !forexWidget) loadForexChart('FX:EURUSD');
+  if(name === 'news') loadNews();
+}
+
+function createTVWidget(containerId, symbol) {
+  return new TradingView.widget({
+    container_id: containerId,
+    symbol: symbol,
+    interval: '15',
+    timezone: 'Asia/Kolkata',
+    theme: 'dark',
+    style: '1',
+    locale: 'en',
+    toolbar_bg: '#0a0a0f',
+    enable_publishing: false,
+    hide_side_toolbar: false,
+    allow_symbol_change: true,
+    studies: ['RSI@tv-basicstudies','MACD@tv-basicstudies','BB@tv-basicstudies','EMA@tv-basicstudies'],
+    width: '100%',
+    height: 450,
+  });
+}
+
+function loadChart(symbol) {
+  document.querySelectorAll('#tab-chart .pair-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tv-chart').innerHTML = '';
+  tvWidget = createTVWidget('tv-chart', symbol);
+}
+
+function loadCryptoChart(symbol) {
+  document.querySelectorAll('#tab-crypto .pair-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('crypto-chart').innerHTML = '';
+  cryptoWidget = createTVWidget('crypto-chart', symbol);
+}
+
+function loadForexChart(symbol) {
+  document.querySelectorAll('#tab-forex .pair-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('forex-chart').innerHTML = '';
+  forexWidget = createTVWidget('forex-chart', symbol);
+}
+
+async function getMNT() {
+  const r = await fetch('https://api.coingecko.com/api/v3/coins/mantle?localization=false&tickers=false&community_data=false');
+  return (await r.json()).market_data;
 }
 
 async function getBlock() {
@@ -155,147 +266,118 @@ async function getGas() {
   return (parseInt((await r.json()).result,16)/1e9).toFixed(2);
 }
 
-function analyzeSentiment(text) {
-  const t = text.toLowerCase();
-  const good = ['surge','rally','gain','bull','rise','record','growth','adoption','launch','partnership','approval','profit','win','bullish','pump','moon','ath','up','high','soar','jump'];
-  const bad = ['crash','fall','drop','bear','hack','scam','fraud','ban','lawsuit','loss','fear','dump','decline','warning','risk','fail','down','low','plunge','tumble'];
-  let s = 0;
-  good.forEach(w=>{if(t.includes(w))s++;});
-  bad.forEach(w=>{if(t.includes(w))s--;});
-  return s>0?'good':s<0?'bad':'neutral';
+function calcRSI(change) {
+  if(change>10)return 80; if(change>5)return 65; if(change>2)return 55;
+  if(change>0)return 50; if(change>-2)return 45; if(change>-5)return 35;
+  if(change>-10)return 25; return 20;
 }
 
-function cbcSignal(price,change) {
+function cbcSignal(price, change, change7d, rsi, high, low) {
   let score=0;
+  if(rsi<30)score+=2; else if(rsi<45)score+=1; else if(rsi>70)score-=2; else if(rsi>55)score-=1;
   if(change<-5)score+=2; else if(change<-2)score+=1; else if(change>5)score-=2; else if(change>2)score-=1;
-  if(price<0.40)score+=2; else if(price>0.80)score-=2;
+  if(change7d<-10)score+=1; else if(change7d>10)score-=1;
+  if(high>low){const pos=(price-low)/(high-low)*100; if(pos<25)score+=1; else if(pos>75)score-=1;}
   const sl=price*0.02;
-  if(score>=3)return{sig:'🟢 STRONG BUY',cls:'buy',score,tp1:(price+sl).toFixed(4),tp2:(price+sl*1.5).toFixed(4),tp3:(price+sl*2).toFixed(4),sl:(price-sl).toFixed(4),bg:'#0d2b1a',bc:'#00ff88'};
-  if(score>=1)return{sig:'🟢 BUY',cls:'buy',score,tp1:(price+sl).toFixed(4),tp2:(price+sl*1.5).toFixed(4),tp3:(price+sl*2).toFixed(4),sl:(price-sl).toFixed(4),bg:'#0d2b1a',bc:'#00ff88'};
-  if(score<=-3)return{sig:'🔴 STRONG SELL',cls:'sell',score,tp1:(price-sl).toFixed(4),tp2:(price-sl*1.5).toFixed(4),tp3:(price-sl*2).toFixed(4),sl:(price+sl).toFixed(4),bg:'#2b0d1a',bc:'#ff4466'};
-  if(score<=-1)return{sig:'🔴 SELL',cls:'sell',score,tp1:(price-sl).toFixed(4),tp2:(price-sl*1.5).toFixed(4),tp3:(price-sl*2).toFixed(4),sl:(price+sl).toFixed(4),bg:'#2b0d1a',bc:'#ff4466'};
-  return{sig:'🟡 HOLD',cls:'hold',score,tp1:'--',tp2:'--',tp3:'--',sl:'--',bg:'#1a1a00',bc:'#ffaa00'};
+  if(score>=4)return{sig:'🚀 STRONG BUY',cls:'buy',score,sl:(price-sl).toFixed(4),tp1:(price+sl).toFixed(4),tp2:(price+sl*1.5).toFixed(4),tp3:(price+sl*2).toFixed(4),bg:'buy-box',tc:'buy-text'};
+  if(score>=2)return{sig:'🟢 BUY',cls:'buy',score,sl:(price-sl).toFixed(4),tp1:(price+sl).toFixed(4),tp2:(price+sl*1.5).toFixed(4),tp3:(price+sl*2).toFixed(4),bg:'buy-box',tc:'buy-text'};
+  if(score<=-4)return{sig:'🔴 STRONG SELL',cls:'sell',score,sl:(price+sl).toFixed(4),tp1:(price-sl).toFixed(4),tp2:(price-sl*1.5).toFixed(4),tp3:(price-sl*2).toFixed(4),bg:'sell-box',tc:'sell-text'};
+  if(score<=-2)return{sig:'🔴 SELL',cls:'sell',score,sl:(price+sl).toFixed(4),tp1:(price-sl).toFixed(4),tp2:(price-sl*1.5).toFixed(4),tp3:(price-sl*2).toFixed(4),bg:'sell-box',tc:'sell-text'};
+  return{sig:'🟡 HOLD',cls:'hold',score,sl:'--',tp1:'--',tp2:'--',tp3:'--',bg:'hold-box',tc:'hold-text'};
 }
 
-function getTrend(change,mult) {
-  const adj=change*mult;
-  if(adj>1)return'<span class="positive">▲ UP</span>';
-  if(adj<-1)return'<span class="negative">▼ DOWN</span>';
-  return'<span style="color:#ffaa00">→ SIDE</span>';
-}
-
-function timeAgo(dateStr) {
-  const diff=Math.floor((Date.now()-new Date(dateStr))/60000);
-  if(diff<60)return diff+'m ago';
-  return Math.floor(diff/60)+'h ago';
-}
-
-async function loadPrices() {
+async function loadSignal() {
   try {
-    const data=await getMNTPrice();
-    const coins=[{id:'mantle',sym:'MNT'},{id:'bitcoin',sym:'BTC'},{id:'ethereum',sym:'ETH'},{id:'solana',sym:'SOL'}];
-    let html='';
-    for(const c of coins){
-      const info=data[c.id];if(!info)continue;
-      const ch=(info.usd_24h_change||0).toFixed(2);
-      const pos=ch>=0;
-      html+=`<div class="price-card"><div class="sym">${c.sym}</div><div class="prc">$${info.usd?.toLocaleString()}</div><div class="${pos?'positive':'negative'}">${pos?'▲':'▼'} ${Math.abs(ch)}%</div></div>`;
-    }
-    document.getElementById('prices').innerHTML=html;
-    const mnt=data['mantle'];
-    if(mnt){
-      const price=mnt.usd,change=mnt.usd_24h_change||0;
-      const sig=cbcSignal(price,change);
-      document.getElementById('cbc-signal').textContent=sig.sig;
-      document.getElementById('cbc-signal').className='signal-big '+sig.cls;
-      document.getElementById('cbc-score').textContent=`Score: ${sig.score} | $${price}`;
-      const box=document.getElementById('cbc-box');
-      box.style.background=sig.bg;box.style.borderColor=sig.bc;
-      document.getElementById('sl-val').textContent='$'+sig.sl;
-      document.getElementById('tp1-val').textContent='$'+sig.tp1;
-      document.getElementById('tp2-val').textContent='$'+sig.tp2;
-      document.getElementById('tp3-val').textContent='$'+sig.tp3;
-      const e9=price*0.9995,e21=price*0.999,e200=price*0.97;
-      document.getElementById('ema9').innerHTML=`<span class="${price>e9?'positive':'negative'}">$${e9.toFixed(4)}</span>`;
-      document.getElementById('ema21').innerHTML=`<span class="${price>e21?'positive':'negative'}">$${e21.toFixed(4)}</span>`;
-      document.getElementById('ema200').innerHTML=`<span class="${price>e200?'positive':'negative'}">$${e200.toFixed(4)}</span>`;
-      document.getElementById('ema-cross').innerHTML=e9>e21?'<span class="positive">Golden ✅</span>':'<span class="negative">Death ❌</span>';
-      const vol=Math.abs(change)/100,std=price*vol*2;
-      document.getElementById('bb-upper').textContent='$'+(price+std*2).toFixed(4);
-      document.getElementById('bb-mid').textContent='$'+price.toFixed(4);
-      document.getElementById('bb-lower').textContent='$'+(price-std*2).toFixed(4);
-      document.getElementById('bb-pos').innerHTML=price>(price+std*2)?'<span class="negative">Above ⚠️</span>':price<(price-std*2)?'<span class="positive">Below 🔥</span>':'<span style="color:#ffaa00">Inside Bands</span>';
-      document.getElementById('bb-squeeze').textContent=vol<0.01?'🔴 SQUEEZE':'🟢 NORMAL';
-      document.getElementById('t1h').innerHTML=getTrend(change,0.25);
-      document.getElementById('t4h').innerHTML=getTrend(change,1);
-      document.getElementById('t1d').innerHTML=getTrend(change,4);
-      document.getElementById('t1w').innerHTML=getTrend(change,28);
-    }
-  } catch(e){document.getElementById('prices').innerHTML='<div style="color:#666;padding:10px">Loading...</div>';}
-}
+    const [md, block, gas] = await Promise.all([getMNT(), getBlock(), getGas()]);
+    const price = md.current_price.usd;
+    const change = md.price_change_percentage_24h || 0;
+    const change7d = md.price_change_percentage_7d || 0;
+    const high = md.high_24h.usd;
+    const low = md.low_24h.usd;
+    const rsi = calcRSI(change);
+    const ema9 = price * 0.9995;
+    const ema21 = price * 0.999;
+    const std = price * Math.abs(change)/100 * 2;
+    const sig = cbcSignal(price, change, change7d, rsi, high, low);
 
-async function loadChain() {
-  try {
-    const [block,gas]=await Promise.all([getBlock(),getGas()]);
-    document.getElementById('block-num').textContent=block.toLocaleString();
-    document.getElementById('gas-val').textContent=gas+' Gwei';
-  } catch(e){}
+    const box = document.getElementById('signal-box');
+    box.className = 'signal-box ' + sig.bg;
+    document.getElementById('sig-text').textContent = sig.sig;
+    document.getElementById('sig-text').className = 'signal-text ' + sig.tc;
+    document.getElementById('sig-detail').textContent = `Score: ${sig.score} | Price: $${price} | RSI: ${rsi}`;
+    document.getElementById('sl').textContent = '$'+sig.sl;
+    document.getElementById('tp1').textContent = '$'+sig.tp1;
+    document.getElementById('tp2').textContent = '$'+sig.tp2;
+    document.getElementById('tp3').textContent = '$'+sig.tp3;
+    document.getElementById('rsi').innerHTML = `<span class="${rsi<30?'pos':rsi>70?'neg':'neu'}">${rsi}</span>`;
+    document.getElementById('ema-cross').innerHTML = ema9>ema21?'<span class="pos">Golden ✅</span>':'<span class="neg">Death ❌</span>';
+    document.getElementById('ema9').textContent = '$'+ema9.toFixed(4);
+    document.getElementById('ema21').textContent = '$'+ema21.toFixed(4);
+    document.getElementById('bb-up').textContent = '$'+(price+std*2).toFixed(4);
+    document.getElementById('bb-mid').textContent = '$'+price.toFixed(4);
+    document.getElementById('bb-low').textContent = '$'+(price-std*2).toFixed(4);
+    document.getElementById('bb-pos').innerHTML = '<span class="neu">Inside Bands</span>';
+    document.getElementById('trend-1d').innerHTML = change>2?'<span class="pos">▲ UP</span>':change<-2?'<span class="neg">▼ DOWN</span>':'<span class="neu">→ SIDE</span>';
+    document.getElementById('block').textContent = block.toLocaleString();
+    document.getElementById('gas').textContent = gas+' Gwei';
+  } catch(e) { console.log(e); }
 }
 
 async function loadNews() {
+  const list = document.getElementById('news-list');
+  list.innerHTML = '<div class="spinner"></div>';
   try {
-    const feed=NEWS_FEEDS[Math.floor(Math.random()*NEWS_FEEDS.length)];
-    const r=await fetch(RSS_PROXY+encodeURIComponent(feed)+'&count=15');
-    const d=await r.json();
-    const items=d.items||[];
-    let bull=0,bear=0,html='';
-    for(const item of items.slice(0,12)){
-      const s=analyzeSentiment(item.title+' '+(item.description||''));
-      if(s==='good')bull++;if(s==='bad')bear++;
-      const badge=s==='good'?'bg':s==='bad'?'bb':'bn';
-      const emoji=s==='good'?'🟢 BULLISH':s==='bad'?'🔴 BEARISH':'🔵 NEUTRAL';
-      html+=`<div class="news-card ${s}" onclick="window.open('${item.link}','_blank')">
-        <span class="ai-tag">🤖 AI</span>
-        <span class="badge ${badge}">${emoji}</span>
-        <div class="news-title">${item.title}</div>
-        <div class="news-meta">📰 ${d.feed?.title||'News'} • ${timeAgo(item.pubDate)}</div>
+    const feeds = [
+      'https://cointelegraph.com/rss',
+      'https://decrypt.co/feed',
+      'https://bitcoinist.com/feed/'
+    ];
+    const feed = feeds[Math.floor(Math.random()*feeds.length)];
+    const r = await fetch('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(feed)+'&count=15');
+    const d = await r.json();
+    const items = d.items || [];
+    let bull=0, bear=0, html='';
+    const good=['surge','rally','gain','bull','rise','record','growth','adoption','bullish','pump','moon','ath','up','launch'];
+    const bad=['crash','fall','drop','bear','hack','scam','fraud','ban','loss','fear','dump','decline','risk','fail'];
+    for(const item of items) {
+      const text=(item.title+' '+(item.description||'')).toLowerCase();
+      let s=0;
+      good.forEach(w=>{if(text.includes(w))s++;});
+      bad.forEach(w=>{if(text.includes(w))s--;});
+      const cls=s>0?'bull':s<0?'bear':'';
+      if(s>0)bull++; if(s<0)bear++;
+      const badge=s>0?'<span class="news-badge bb">🟢 BULLISH</span>':s<0?'<span class="news-badge rb">🔴 BEARISH</span>':'<span class="news-badge nb">🔵 NEUTRAL</span>';
+      const ago=Math.floor((Date.now()-new Date(item.pubDate))/60000);
+      const time=ago<60?ago+'m ago':Math.floor(ago/60)+'h ago';
+      html+=`<div class="news-item ${cls}" onclick="window.open('${item.link}','_blank')">
+        ${badge}
+        <div style="font-size:13px;font-weight:bold;margin-bottom:3px">${item.title}</div>
+        <div style="font-size:10px;color:#666">📰 ${d.feed?.title||'News'} • ${time}</div>
       </div>`;
     }
-    document.getElementById('news').innerHTML=html||'<div style="color:#666;padding:20px;text-align:center">No news</div>';
+    list.innerHTML = html || '<div style="color:#666;text-align:center;padding:20px">No news available</div>';
     const total=bull+bear||1;
     document.getElementById('bull-bar').style.width=Math.round(bull/total*100)+'%';
-    document.getElementById('bull-count').textContent='Bull: '+bull;
-    document.getElementById('bear-count').textContent='Bear: '+bear;
-    const sc=bull-bear;
-    document.getElementById('news-score').textContent=(sc>0?'+':'')+sc;
-    document.getElementById('news-score').style.color=sc>0?'#00ff88':sc<0?'#ff4466':'#888';
-    if(bull>bear*1.2){
-      document.getElementById('sent-emoji').textContent='🟢';
-      document.getElementById('sent-text').textContent='BULLISH';
-      document.getElementById('sent-text').style.color='#00ff88';
-      document.getElementById('fear-val').textContent='Greed 😈';
-      document.getElementById('fear-val').style.color='#00ff88';
-    } else if(bear>bull*1.2){
-      document.getElementById('sent-emoji').textContent='🔴';
-      document.getElementById('sent-text').textContent='BEARISH';
-      document.getElementById('sent-text').style.color='#ff4466';
-      document.getElementById('fear-val').textContent='Fear 😨';
-      document.getElementById('fear-val').style.color='#ff4466';
-    } else {
-      document.getElementById('sent-emoji').textContent='🔵';
-      document.getElementById('sent-text').textContent='NEUTRAL';
-      document.getElementById('sent-text').style.color='#00aaff';
-      document.getElementById('fear-val').textContent='Neutral 😐';
-      document.getElementById('fear-val').style.color='#888';
-    }
-  } catch(e){
-    document.getElementById('news').innerHTML='<div style="color:#ff4466;padding:20px;text-align:center">News loading failed</div>';
+    document.getElementById('bull-cnt').textContent='Bull: '+bull;
+    document.getElementById('bear-cnt').textContent='Bear: '+bear;
+    const emoji=bull>bear?'🟢':bear>bull?'🔴':'🔵';
+    const text=bull>bear?'BULLISH':bear>bull?'BEARISH':'NEUTRAL';
+    document.getElementById('news-sent-emoji').textContent=emoji;
+    document.getElementById('news-sent-text').textContent=text;
+    document.getElementById('sent-emoji').textContent=emoji;
+    document.getElementById('sent-text').textContent=text;
+    document.getElementById('sent-text').style.color=bull>bear?'#00ff88':bear>bull?'#ff4466':'#00aaff';
+  } catch(e) {
+    list.innerHTML='<div style="color:#ff4466;text-align:center;padding:20px">News load failed - try refreshing</div>';
   }
 }
 
-async function loadAll(){await Promise.all([loadPrices(),loadChain(),loadNews()]);}
+async function loadAll() {
+  await Promise.all([loadSignal(), loadNews()]);
+}
+
 loadAll();
-setInterval(loadAll,30000);
+setInterval(loadAll, 30000);
 </script>
 </body>
 </html>
