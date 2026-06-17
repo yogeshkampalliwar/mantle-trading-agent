@@ -1,0 +1,237 @@
+[
+  {
+    "cycle": 1,
+    "timestamp": "2026-06-17T13:24:25.439424",
+    "market": {
+      "price": 0.563595,
+      "high_24h": 0.579923,
+      "low_24h": 0.553524,
+      "volume": 26495890,
+      "market_cap": 1861149415,
+      "change_24h": -2.15054,
+      "change_7d": 5.49253,
+      "ath": 2.86,
+      "atl": 0.307978
+    },
+    "block": 40069095,
+    "gas_gwei": 50.0001,
+    "rsi": 35,
+    "ema9": 0.503079,
+    "ema21": 0.346305,
+    "ema200": 0.053634,
+    "ema_cross": "Golden",
+    "bollinger": {
+      "upper": 0.612076,
+      "mid": 0.563595,
+      "lower": 0.515114
+    },
+    "news": {
+      "sentiment": "NEUTRAL",
+      "score": 20.0,
+      "bull": 3,
+      "bear": 2
+    },
+    "signal": {
+      "signal": "BUY \ud83d\udfe2",
+      "side": "LONG",
+      "score": 2,
+      "sl": 0.552323,
+      "tp1": 0.574867,
+      "tp2": 0.580503,
+      "tp3": 0.586139,
+      "rr": "1:2.0",
+      "reasons": [
+        "RSI low (35)",
+        "24h down -2.2%"
+      ]
+    }
+  },
+  {
+    "cycle": 2,
+    "timestamp": "2026-06-17T13:24:33.067603",
+    "market": {
+      "price": 0.563595,
+      "high_24h": 0.579923,
+      "low_24h": 0.553524,
+      "volume": 26495890,
+      "market_cap": 1861149415,
+      "change_24h": -2.15054,
+      "change_7d": 5.49253,
+      "ath": 2.86,
+      "atl": 0.307978
+    },
+    "block": 40069099,
+    "gas_gwei": 50.0001,
+    "rsi": 35,
+    "ema9": 0.503079,
+    "ema21": 0.346305,
+    "ema200": 0.053634,
+    "ema_cross": "Golden",
+    "bollinger": {
+      "upper": 0.612076,
+      "mid": 0.563595,
+      "lower": 0.515114
+    },
+    "news": {
+      "sentiment": "NEUTRAL",
+      "score": 20.0,
+      "bull": 3,
+      "bear": 2
+    },
+    "signal": {
+      "signal": "BUY \ud83d\udfe2",
+      "side": "LONG",
+      "score": 2,
+      "sl": 0.552323,
+      "tp1": 0.574867,
+      "tp2": 0.580503,
+      "tp3": 0.586139,
+      "rr": "1:2.0",
+      "reasons": [
+        "RSI low (35)",
+        "24h down -2.2%"
+      ]
+    }
+  },
+  {
+    "cycle": 3,
+    "timestamp": "2026-06-17T13:24:41.143888",
+    "market": {
+      "price": 0.563595,
+      "high_24h": 0.579923,
+      "low_24h": 0.553524,
+      "volume": 26495890,
+      "market_cap": 1861149415,
+      "change_24h": -2.15054,
+      "change_7d": 5.49253,
+      "ath": 2.86,
+      "atl": 0.307978
+    },
+    "block": 40069102,
+    "gas_gwei": 50.0001,
+    "rsi": 35,
+    "ema9": 0.503079,
+    "ema21": 0.346305,
+    "ema200": 0.053634,
+    "ema_cross": "Golden",
+    "bollinger": {
+      "upper": 0.612076,
+      "mid": 0.563595,
+      "lower": 0.515114
+    },
+    "news": {
+      "sentiment": "NEUTRAL",
+      "score": 20.0,
+      "bull": 3,
+      "bear": 2
+    },
+    "signal": {
+      "signal": "BUY \ud83d\udfe2",
+      "side": "LONG",
+      "score": 2,
+      "sl": 0.552323,
+      "tp1": 0.574867,
+      "tp2": 0.580503,
+      "tp3": 0.586139,
+      "rr": "1:2.0",
+      "reasons": [
+        "RSI low (35)",
+        "24h down -2.2%"
+      ]
+    }
+  },
+  {
+    "cycle": 4,
+    "timestamp": "2026-06-17T13:24:47.632198",
+    "market": {
+      "price": 0.563595,
+      "high_24h": 0.579923,
+      "low_24h": 0.553524,
+      "volume": 26495890,
+      "market_cap": 1861149415,
+      "change_24h": -2.15054,
+      "change_7d": 5.49253,
+      "ath": 2.86,
+      "atl": 0.307978
+    },
+    "block": 40069106,
+    "gas_gwei": 50.0001,
+    "rsi": 35,
+    "ema9": 0.503079,
+    "ema21": 0.346305,
+    "ema200": 0.053634,
+    "ema_cross": "Golden",
+    "bollinger": {
+      "upper": 0.612076,
+      "mid": 0.563595,
+      "lower": 0.515114
+    },
+    "news": {
+      "sentiment": "NEUTRAL",
+      "score": 20.0,
+      "bull": 3,
+      "bear": 2
+    },
+    "signal": {
+      "signal": "BUY \ud83d\udfe2",
+      "side": "LONG",
+      "score": 2,
+      "sl": 0.552323,
+      "tp1": 0.574867,
+      "tp2": 0.580503,
+      "tp3": 0.586139,
+      "rr": "1:2.0",
+      "reasons": [
+        "RSI low (35)",
+        "24h down -2.2%"
+      ]
+    }
+  },
+  {
+    "cycle": 5,
+    "timestamp": "2026-06-17T13:24:55.084650",
+    "market": {
+      "price": 0.563595,
+      "high_24h": 0.579923,
+      "low_24h": 0.553524,
+      "volume": 26495890,
+      "market_cap": 1861149415,
+      "change_24h": -2.15054,
+      "change_7d": 5.49253,
+      "ath": 2.86,
+      "atl": 0.307978
+    },
+    "block": 40069110,
+    "gas_gwei": 50.0001,
+    "rsi": 35,
+    "ema9": 0.503079,
+    "ema21": 0.346305,
+    "ema200": 0.053634,
+    "ema_cross": "Golden",
+    "bollinger": {
+      "upper": 0.612076,
+      "mid": 0.563595,
+      "lower": 0.515114
+    },
+    "news": {
+      "sentiment": "NEUTRAL",
+      "score": 20.0,
+      "bull": 3,
+      "bear": 2
+    },
+    "signal": {
+      "signal": "BUY \ud83d\udfe2",
+      "side": "LONG",
+      "score": 2,
+      "sl": 0.552323,
+      "tp1": 0.574867,
+      "tp2": 0.580503,
+      "tp3": 0.586139,
+      "rr": "1:2.0",
+      "reasons": [
+        "RSI low (35)",
+        "24h down -2.2%"
+      ]
+    }
+  }
+]

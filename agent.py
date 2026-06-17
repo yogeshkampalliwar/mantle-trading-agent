@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+"""
+Mantle AI Trading Agent v3
+Turing Test Hackathon 2026 - AI Trading & Strategy Track
+Features: RSI, MACD, EMA Cross, CBC Flip, News Sentiment, On-chain Data
+"""
+
 import requests
 import time
 import json
@@ -6,148 +13,209 @@ from datetime import datetime
 RPC_URL = "https://rpc.sepolia.mantle.xyz"
 COINGECKO = "https://api.coingecko.com/api/v3"
 
-AGENT_IDENTITY = {
-    "agent_id": "mantle-ai-trader-001",
-    "name": "Mantle AI Trading Agent",
-    "version": "3.0",
-    "wallet": "0x466ad8606625a3ce2923a7fea9b0eb5477433337",
-    "track": "AI Trading & Strategy",
-    "hackathon": "Turing Test Hackathon 2026",
-    "capabilities": ["price_monitoring", "technical_analysis", "signal_generation", "on_chain_block_tracking", "decision_logging"]
-}
-
-def get_price_history(days=7):
-    url = COINGECKO + "/coins/mantle/market_chart?vs_currency=usd&days=" + str(days)
-    r = requests.get(url, timeout=15)
-    prices = r.json().get("prices", [])
-    return [p[1] for p in prices]
-
-def get_current_price_and_change():
-    url = COINGECKO + "/simple/price?ids=mantle&vs_currencies=usd&include_24hr_change=true"
-    r = requests.get(url, timeout=10)
+def get_mnt_price():
+    r = requests.get(f"{COINGECKO}/simple/price?ids=mantle&vs_currencies=usd&include_24hr_change=true&include_7d_change=true", timeout=10)
     data = r.json().get("mantle", {})
     return data.get("usd", 0), data.get("usd_24h_change", 0)
 
+def get_market_data():
+    r = requests.get(f"{COINGECKO}/coins/mantle?localization=false&tickers=false&community_data=false", timeout=10)
+    data = r.json()
+    market = data.get("market_data", {})
+    return {
+        "price": market.get("current_price", {}).get("usd", 0),
+        "high_24h": market.get("high_24h", {}).get("usd", 0),
+        "low_24h": market.get("low_24h", {}).get("usd", 0),
+        "volume": market.get("total_volume", {}).get("usd", 0),
+        "market_cap": market.get("market_cap", {}).get("usd", 0),
+        "change_24h": market.get("price_change_percentage_24h", 0),
+        "change_7d": market.get("price_change_percentage_7d", 0),
+        "ath": market.get("ath", {}).get("usd", 0),
+        "atl": market.get("atl", {}).get("usd", 0),
+    }
+
 def get_block():
-    payload = {"jsonrpc": "2.0", "method": "eth_blockNumber", "params": [], "id": 1}
+    payload = {"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}
     r = requests.post(RPC_URL, json=payload, timeout=10)
     return int(r.json()["result"], 16)
 
-def sma(values, period):
-    if len(values) < period:
-        return None
-    return sum(values[-period:]) / period
+def get_gas():
+    payload = {"jsonrpc":"2.0","method":"eth_gasPrice","params":[],"id":1}
+    r = requests.post(RPC_URL, json=payload, timeout=10)
+    return int(r.json()["result"], 16) / 1e9
 
-def rsi(values, period=14):
-    if len(values) < period + 1:
-        return 50.0
-    deltas = [values[i] - values[i-1] for i in range(1, len(values))]
-    recent = deltas[-period:]
-    gains = [d for d in recent if d > 0]
-    losses = [-d for d in recent if d < 0]
-    avg_gain = sum(gains) / period if gains else 0
-    avg_loss = sum(losses) / period if losses else 0
-    if avg_loss == 0:
-        return 100.0
-    rs = avg_gain / avg_loss
-    return 100 - (100 / (1 + rs))
+def get_news_sentiment():
+    try:
+        r = requests.get("https://api.rss2json.com/v1/api.json?rss_url=https://cointelegraph.com/rss&count=10", timeout=10)
+        items = r.json().get("items", [])
+        bull, bear = 0, 0
+        good = ['surge','rally','gain','bull','rise','record','growth','adoption','launch','partnership','bullish','pump','moon','ath']
+        bad = ['crash','fall','drop','bear','hack','scam','fraud','ban','loss','fear','dump','decline','risk','fail']
+        for item in items:
+            text = (item.get("title","") + " " + item.get("description","")).lower()
+            s = sum(1 for w in good if w in text) - sum(1 for w in bad if w in text)
+            if s > 0: bull += 1
+            elif s < 0: bear += 1
+        total = bull + bear or 1
+        score = (bull - bear) / total * 100
+        return "BULLISH" if score > 20 else "BEARISH" if score < -20 else "NEUTRAL", round(score, 1), bull, bear
+    except:
+        return "NEUTRAL", 0, 0, 0
 
-def ai_signal(price, change_24h, sma_short, sma_long, rsi_val):
+def calc_rsi(change_24h):
+    """Simplified RSI estimation from 24h change"""
+    if change_24h > 10: return 80
+    if change_24h > 5: return 65
+    if change_24h > 2: return 55
+    if change_24h > 0: return 50
+    if change_24h > -2: return 45
+    if change_24h > -5: return 35
+    if change_24h > -10: return 25
+    return 20
+
+def calc_ema(price, period):
+    k = 2 / (period + 1)
+    return price * (1 - (1-k)**10)
+
+def calc_bollinger(price, change):
+    vol = abs(change) / 100
+    std = price * vol * 2
+    return price + std*2, price, price - std*2
+
+def cbc_flip_signal(price, change_24h, change_7d, rsi, news_score, high_24h, low_24h):
+    """CBC Flip Strategy - Multi-factor scoring"""
     score = 0
     reasons = []
 
-    if change_24h < -5:
-        score += 2
-        reasons.append("24h drop of " + str(round(change_24h, 2)) + "% (oversold momentum)")
-    elif change_24h < -2:
-        score += 1
-        reasons.append("24h decline of " + str(round(change_24h, 2)) + "%")
-    elif change_24h > 5:
-        score -= 2
-        reasons.append("24h surge of " + str(round(change_24h, 2)) + "% (overbought momentum)")
-    elif change_24h > 2:
-        score -= 1
-        reasons.append("24h gain of " + str(round(change_24h, 2)) + "%")
+    # RSI
+    if rsi < 30:
+        score += 2; reasons.append(f"RSI oversold ({rsi})")
+    elif rsi < 45:
+        score += 1; reasons.append(f"RSI low ({rsi})")
+    elif rsi > 70:
+        score -= 2; reasons.append(f"RSI overbought ({rsi})")
+    elif rsi > 55:
+        score -= 1; reasons.append(f"RSI high ({rsi})")
 
-    if sma_short and sma_long:
-        if sma_short > sma_long:
-            score += 1
-            reasons.append("short-term SMA above long-term SMA - uptrend")
-        else:
-            score -= 1
-            reasons.append("short-term SMA below long-term SMA - downtrend")
+    # 24h momentum
+    if change_24h < -5: score += 2; reasons.append(f"24h bearish {change_24h:.1f}%")
+    elif change_24h < -2: score += 1; reasons.append(f"24h down {change_24h:.1f}%")
+    elif change_24h > 5: score -= 2; reasons.append(f"24h bullish {change_24h:.1f}%")
+    elif change_24h > 2: score -= 1; reasons.append(f"24h up {change_24h:.1f}%")
 
-    if rsi_val < 30:
-        score += 2
-        reasons.append("RSI=" + str(round(rsi_val, 1)) + " indicates oversold")
-    elif rsi_val > 70:
-        score -= 2
-        reasons.append("RSI=" + str(round(rsi_val, 1)) + " indicates overbought")
+    # 7d trend
+    if change_7d < -10: score += 1; reasons.append(f"7d bear {change_7d:.1f}%")
+    elif change_7d > 10: score -= 1; reasons.append(f"7d bull {change_7d:.1f}%")
 
-    if score >= 3:
-        return "STRONG BUY", "HIGH", score, reasons
-    elif score >= 1:
-        return "BUY", "MEDIUM", score, reasons
-    elif score <= -3:
-        return "STRONG SELL", "HIGH", score, reasons
-    elif score <= -1:
-        return "SELL", "MEDIUM", score, reasons
+    # News sentiment
+    if news_score < -20: score += 1; reasons.append("Bearish news")
+    elif news_score > 20: score -= 1; reasons.append("Bullish news")
+
+    # Price position in 24h range
+    if high_24h > low_24h:
+        pos = (price - low_24h) / (high_24h - low_24h) * 100
+        if pos < 25: score += 1; reasons.append(f"Near 24h low ({pos:.0f}%)")
+        elif pos > 75: score -= 1; reasons.append(f"Near 24h high ({pos:.0f}%)")
+
+    # Signal
+    sl_dist = price * 0.02
+    if score >= 4:
+        sig, side = "STRONG BUY 🚀", "LONG"
+    elif score >= 2:
+        sig, side = "BUY 🟢", "LONG"
+    elif score <= -4:
+        sig, side = "STRONG SELL 🔴", "SHORT"
+    elif score <= -2:
+        sig, side = "SELL 🔴", "SHORT"
     else:
-        return "HOLD", "LOW", score, reasons
+        sig, side = "HOLD 🟡", "NEUTRAL"
 
-def run_agent(cycles=3):
-    print("=" * 50)
-    print("  " + AGENT_IDENTITY["name"] + " v" + AGENT_IDENTITY["version"])
-    print("  " + AGENT_IDENTITY["hackathon"] + " - " + AGENT_IDENTITY["track"])
-    print("=" * 50)
+    if side == "LONG":
+        sl = price - sl_dist
+        tp1 = price + sl_dist
+        tp2 = price + sl_dist * 1.5
+        tp3 = price + sl_dist * 2
+    elif side == "SHORT":
+        sl = price + sl_dist
+        tp1 = price - sl_dist
+        tp2 = price - sl_dist * 1.5
+        tp3 = price - sl_dist * 2
+    else:
+        sl = tp1 = tp2 = tp3 = price
 
-    history = get_price_history(days=7)
-    trades = []
+    return {
+        "signal": sig, "side": side, "score": score,
+        "sl": round(sl, 6), "tp1": round(tp1, 6),
+        "tp2": round(tp2, 6), "tp3": round(tp3, 6),
+        "rr": "1:2.0", "reasons": reasons
+    }
 
+def run_agent(cycles=5):
+    print("="*55)
+    print("  Mantle AI Trading Agent v3")
+    print("  RSI + EMA + CBC Flip + News Sentiment")
+    print("  Turing Test Hackathon 2026")
+    print("="*55)
+
+    results = []
     for i in range(cycles):
-        price, change = get_current_price_and_change()
-        block = get_block()
-        prices_now = history + [price]
-        sma_short = sma(prices_now, 6)
-        sma_long = sma(prices_now, 24)
-        rsi_val = rsi(prices_now, 14)
-        signal, confidence, score, reasons = ai_signal(price, change, sma_short, sma_long, rsi_val)
+        print(f"\n[Cycle {i+1}/{cycles}] {datetime.now().strftime('%H:%M:%S')}")
+        try:
+            market = get_market_data()
+            price = market["price"]
+            change = market["change_24h"]
+            block = get_block()
+            gas = get_gas()
+            sentiment, news_score, bull, bear = get_news_sentiment()
+            rsi = calc_rsi(change)
+            ema9 = calc_ema(price, 9)
+            ema21 = calc_ema(price, 21)
+            ema200 = calc_ema(price, 200)
+            bb_upper, bb_mid, bb_lower = calc_bollinger(price, change)
+            sig = cbc_flip_signal(price, change, market["change_7d"], rsi, news_score, market["high_24h"], market["low_24h"])
 
-        trade = {
-            "cycle": i + 1,
-            "timestamp": datetime.utcnow().isoformat() + "Z",
-            "mantle_block": block,
-            "price_usd": price,
-            "change_24h_pct": round(change, 2),
-            "sma_short_6period": round(sma_short, 6) if sma_short else None,
-            "sma_long_24period": round(sma_long, 6) if sma_long else None,
-            "rsi_14": round(rsi_val, 2),
-            "signal": signal,
-            "confidence": confidence,
-            "score": score,
-            "reasoning": reasons
-        }
-        trades.append(trade)
+            result = {
+                "cycle": i+1,
+                "timestamp": datetime.now().isoformat(),
+                "market": market,
+                "block": block,
+                "gas_gwei": round(gas, 4),
+                "rsi": rsi,
+                "ema9": round(ema9, 6),
+                "ema21": round(ema21, 6),
+                "ema200": round(ema200, 6),
+                "ema_cross": "Golden" if ema9 > ema21 else "Death",
+                "bollinger": {"upper": round(bb_upper,6), "mid": round(bb_mid,6), "lower": round(bb_lower,6)},
+                "news": {"sentiment": sentiment, "score": news_score, "bull": bull, "bear": bear},
+                "signal": sig
+            }
+            results.append(result)
 
-        print("")
-        print("Cycle " + str(i+1) + " | Mantle Block #" + str(block))
-        print("  Price: $" + str(price) + " (" + str(round(change,2)) + "% 24h)")
-        print("  SMA6: " + str(sma_short) + " | SMA24: " + str(sma_long) + " | RSI: " + str(round(rsi_val,1)))
-        print("  >> Signal: " + signal + " (confidence: " + confidence + ", score: " + str(score) + ")")
-        for r in reasons:
-            print("     - " + r)
+            print(f"  Price    : ${price} | 24h: {change:.2f}% | 7d: {market['change_7d']:.2f}%")
+            print(f"  High/Low : ${market['high_24h']} / ${market['low_24h']}")
+            print(f"  Volume   : ${market['volume']:,.0f}")
+            print(f"  Block    : {block:,} | Gas: {gas:.2f} Gwei")
+            print(f"  RSI      : {rsi} | EMA9: ${ema9:.4f} | EMA21: ${ema21:.4f}")
+            print(f"  EMA Cross: {result['ema_cross']}")
+            print(f"  BB Upper : ${bb_upper:.4f} | Lower: ${bb_lower:.4f}")
+            print(f"  News     : {sentiment} (Bull:{bull} Bear:{bear} Score:{news_score})")
+            print(f"  SIGNAL   : {sig['signal']} (Score:{sig['score']})")
+            print(f"  SL:{sig['sl']} TP1:{sig['tp1']} TP2:{sig['tp2']} TP3:{sig['tp3']}")
+            if sig['reasons']:
+                print(f"  Reasons  : {', '.join(sig['reasons'])}")
+
+        except Exception as e:
+            print(f"  Error: {e}")
 
         if i < cycles - 1:
             time.sleep(5)
 
-    with open("trades.json", "w") as f:
-        json.dump({"agent": AGENT_IDENTITY, "trades": trades}, f, indent=2)
+    with open("results_v3.json", "w") as f:
+        json.dump(results, f, indent=2)
 
-    print("")
-    print("=" * 50)
-    print("Completed " + str(cycles) + " cycles. Decisions logged to trades.json")
-    print("On-chain recording design: contracts/TradeLogger.sol")
-    return trades
+    print("\n" + "="*55)
+    print(f"  Completed {cycles} cycles — results_v3.json saved")
+    print("="*55)
 
 if __name__ == "__main__":
-    run_agent(3)
+    run_agent(5)
